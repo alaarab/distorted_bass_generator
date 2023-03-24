@@ -20,9 +20,9 @@ Distorted Bass Generator is a Python script that generates random bass sounds wi
 
 To install the required packages, run:
 
-\`\`\`bash
+\\\bash
 pip install numpy scipy pydub
-\`\`\`
+\\\
 
 ## Usage
 
@@ -30,15 +30,15 @@ pip install numpy scipy pydub
 
 2. Modify the `num_sounds` variable in the script to specify the number of bass sounds you want to generate:
 
-\`\`\`python
+\\\python
 num_sounds = 10  # Adjust this value to generate more or fewer sounds
-\`\`\`
+\\\
 
 3. Run the script:
 
-\`\`\`bash
+\\\bash
 python distorted_bass_generator.py
-\`\`\`
+\\\
 
 4. The script will generate WAV files named `distorted_bass_1.wav`, `distorted_bass_2.wav`, and so on, in the same directory as the script.
 
