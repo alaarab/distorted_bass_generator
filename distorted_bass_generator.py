@@ -161,6 +161,23 @@ def add_noise(audio, noise_type='white', snr=20):
     generated_noise = np.sqrt(noise_power) * generated_noise
     return audio + generated_noise
 
+def add_granulizer(audio, sample_rate, grain_duration, overlap, num_grains):
+    grain_samples = int(grain_duration * sample_rate)
+    overlap_samples = int(grain_samples * overlap)
+    num_samples = len(audio)
+    num_grain_samples = grain_samples * num_grains - overlap_samples * (num_grains - 1)
+    padded_audio = np.zeros(num_grain_samples)
+    grains = np.zeros((num_grains, grain_samples))
+
+    for i in range(num_grains):
+        start_idx = i * (grain_samples - overlap_samples)
+        end_idx = start_idx + grain_samples
+        grain = audio[start_idx:end_idx]
+        grains[i, :len(grain)] = grain
+        padded_audio[start_idx:start_idx+len(grain)] += grain
+
+    return padded_audio[:num_samples]
+
 num_sounds = 100
 sample_rate = 44100
 
@@ -209,6 +226,14 @@ for i in range(num_sounds):
     # Apply saturation
     saturation_amount = 5  # You can adjust this value for the desired saturation level
     saturated_bass = apply_saturation(distorted_bass, saturation_amount)
+
+    # Apply granulizer effect
+    if random.random() < 0.5:
+        grain_duration = random.uniform(0.01, 0.05)  # Random duration of each grain between 10 and 50 milliseconds
+        overlap = random.uniform(0, 0.5)  # Random overlap between 0 and 50%
+        num_grains = random.randint(10, 50)  # Random number of grains between 10 and 50
+        granulized_wave = add_granulizer(saturated_bass, sample_rate, grain_duration, overlap, num_grains)
+        saturated_bass = granulized_wave
 
     # Convert NumPy array to PyDub AudioSegment for compression
     saturated_bass_int16 = (saturated_bass * 32767).astype(np.int16)
